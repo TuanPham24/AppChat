@@ -11,9 +11,10 @@ export const useAuthStore = create<AuthState>((set,get)=>({
     signUp: async(username, password, email, firstName, lastName) =>{
         try{
             set({loading: true});
-            // goi api
-            await authService.signUp(username, password, email, firstName, lastName)
+             await authService.signUp(username, password, email, firstName, lastName)
+            
             toast.success("Đăng ký thành công! Bạn sẽ được chuyển sang trang đăng nhập.")
+            
         }catch(error){
             toast.error("Đăng ký thất bại");
         }finally{
