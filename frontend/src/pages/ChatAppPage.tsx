@@ -1,9 +1,9 @@
-import React from 'react'
+import { Logout } from "@/components/auth/Logout";
 
 export default function ChatAppPage() {
     return (
         <div>
-            <h1>Chat App</h1>
+            <Logout />
         </div>
     )
 }

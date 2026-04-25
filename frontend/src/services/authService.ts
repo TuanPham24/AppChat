@@ -22,7 +22,11 @@ export const authService = {
         const res = await api.post("/auth/signin",{
             username,
             password
-        })
-        return res.data
+        }, {withCredentials: true})
+        return res.data // access_token
+    },
+
+    signOut: async()=>{
+        return api.post("/auth/signout", {}, {withCredentials: true})
     }
 }
