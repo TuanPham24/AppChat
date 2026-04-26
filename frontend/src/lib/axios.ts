@@ -15,4 +15,32 @@ api.interceptors.request.use((config)=>{
     return config;  
 });
 
+// Tu dong goi refresh api khi access token het han
+api.interceptors.response.use((res)=>res, async(error)=>{
+    const originalRequest = error.config;
+
+    // Nhung api khong can check
+    if(originalRequest.url.includes('/auth/signin') || originalRequest.url.includes('/auth/refresh') || originalRequest.url.includes('/auth/signup')) {
+        return Promise.reject(error);
+    }
+
+    originalRequest._retryCount = originalRequest._retryCount || 0;
+    if(error.response?.status === 401 && originalRequest._retryCount < 4){
+        originalRequest._retryCount++;
+        try {
+            const res = await api.post('/auth/refresh', {withCredentials: true});
+        const newAccessToken = res.data.accessToken;
+
+            useAuthStore.getState().setAccessToken(newAccessToken);
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            return api(originalRequest);
+        } catch (error) {
+            useAuthStore.getState().clearState();
+            return Promise.reject(error);
+        }
+    }
+
+    return Promise.reject(error);
+})
+
 export default api;
