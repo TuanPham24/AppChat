@@ -2,8 +2,12 @@ import {create} from "zustand";
 import {toast} from "sonner";
 import {authService} from "@/services/authService";
 import type {AuthState} from "@/types/store";
+import {persist} from "zustand/middleware";
+import {useChatStore} from "./useChatStore";
 
-export const useAuthStore = create<AuthState>((set,get)=>({
+export const useAuthStore = create<AuthState>()(
+    persist(
+        (set,get)=>({
     accessToken: null,
     user: null,
     loading: false,
@@ -13,7 +17,9 @@ export const useAuthStore = create<AuthState>((set,get)=>({
     },
 
     clearState: () =>{
-        set({accessToken: null, user:null, loading:false})
+        set({accessToken: null, user:null, loading:false});
+        localStorage.clear();
+        useChatStore.getState().reset();
     },
 
     signUp: async(username, password, email, firstName, lastName) =>{
@@ -33,6 +39,9 @@ export const useAuthStore = create<AuthState>((set,get)=>({
     signIn: async(username, password) =>{
         try{
             set({loading:true});
+
+            localStorage.clear();
+            useChatStore.getState().reset();
             const {accessToken}=await authService.signIn(username, password);
             
             get().setAccessToken(accessToken);
@@ -90,4 +99,10 @@ export const useAuthStore = create<AuthState>((set,get)=>({
         }
     }
     
-}))
+}),
+    
+    {           
+        name: "auth-storage",
+        partialize: (state) => ({user: state.user}), // Chi persist user
+    })
+);
