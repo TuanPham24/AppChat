@@ -36,7 +36,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" className="bg-blue-500">
+            <SidebarMenuButton size="lg" className="bg-gradient-primary">
                 <a href="#" className="w-full">
                   <div className="flex w-full items-center px-2 justify-between">
                     <h1 className="text-xl font-bold text-white">Moji</h1>

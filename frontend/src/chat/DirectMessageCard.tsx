@@ -8,7 +8,7 @@ import UnreadCountBadge from "./UnreadCountBadge";
 import UserAvatar from "./UserAvatar";
 const DirectMessageCard = ({convo}:{convo:Conversation}) => {
     const {user} = useAuthStore();
-    const {activeConversationId, setActiveConversationId, messages} = useChatStore();
+    const {activeConversationId, setActiveConversationId, messages, fetchMessages} = useChatStore();
 
     if(!user) return null;
     const otherUser = convo.participants.find((p)=>p._id !== user._id);
@@ -24,7 +24,7 @@ console.log("count", convo.unreadCounts?.[user._id]);
     const handleSelectConversation = async(id:string) =>{
         setActiveConversationId(id);
         if(!messages[id]){
-            //todo: fetch messages
+            await fetchMessages()
         }
     }
     return <ChatCard 
