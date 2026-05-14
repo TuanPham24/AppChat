@@ -79,7 +79,7 @@ export const checkGroupMembership = async (req, res, next) => {
     }
 
     const isMember = conversation.participants.some((p) => {
-      p.userId.toString === userId.toString();
+      return p.userId.toString() === userId.toString();
     });
 
     if (!isMember) {

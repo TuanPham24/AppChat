@@ -47,6 +47,7 @@ export const useAuthStore = create<AuthState>()(
             get().setAccessToken(accessToken);
 
             await get().fetchMe();
+            useChatStore.getState().fetchConversations();
             toast.success("Đăng nhập thành công!");
         }catch(error){
             console.error(error);

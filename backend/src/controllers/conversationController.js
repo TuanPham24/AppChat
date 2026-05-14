@@ -102,7 +102,7 @@ export const getConversations = async (req, res) => {
       }));
       return {
         ...convo.toObject(),
-        unredCounts: convo.unreadCounts || {},
+        unreadCounts: convo.unreadCounts || {},
         participants,
       };
     });
