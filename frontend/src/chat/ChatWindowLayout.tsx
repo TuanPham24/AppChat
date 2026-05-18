@@ -58,7 +58,7 @@ const ChatWindowLayout = () => {
 
             {/* Header */}
             <div className="relative z-10">
-                <ChatWindowHeader />
+                <ChatWindowHeader chat={selectedConvo} />
             </div>
 
             {/* Body */}
@@ -88,7 +88,7 @@ const ChatWindowLayout = () => {
                     p-3
                 "
             >
-                <MessageInput />
+                <MessageInput selectedConvo={selectedConvo} />
             </div>
         </div>
     </div>

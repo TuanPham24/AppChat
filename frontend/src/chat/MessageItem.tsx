@@ -40,7 +40,7 @@ const MessageItem = ({
   return (
     <div
       className={cn(
-        "flex gap-2 mt-1 message-bounce",
+        "flex gap-2 mt-1 message-bounce mt-1",
         message.isOwn ? "justify-end" : "justify-start"
       )}
     >
@@ -67,10 +67,10 @@ const MessageItem = ({
         {/* bubble */}
         <Card
           className={cn(
-            "p-3",
+            "p-3 border-0 shadow-none",
             message.isOwn
-              ? "chat-bubble-sent border-0"
-              : "chat-bubble-received"
+              ? "!bg-purple-500 text-white"
+              : "!bg-muted"
           )}
         >
           <p className="text-sm leading-relaxed break-words">
