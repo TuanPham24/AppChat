@@ -86,7 +86,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   />
 
                   {errors.lastname && (
-                    <p className="text-destructive text-sm">
+                    <p className="error-message">
                       {errors.lastname.message}
                     </p>
                   )}

@@ -3,6 +3,7 @@ import {
   createConversation,
   getConversations,
   getMessages,
+  markAsSeen,
 } from "../controllers/conversationController.js";
 import { checkFriendShip } from "../middlewares/friendMiddleware.js";
 const router = express.Router();

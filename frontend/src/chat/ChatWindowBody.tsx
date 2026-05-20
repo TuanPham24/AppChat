@@ -1,29 +1,149 @@
 import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import MessageItem from "./MessageItem";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-const ChatWindowBody = () =>{
-    const {activeConversationId, conversations, messages: allMessages } = useChatStore();
-    const messages = allMessages[activeConversationId!]?.items ?? [];
-    const selectedConvo = conversations.find((c)=>c._id === activeConversationId);
+const ChatWindowBody = () => {
+  const {
+    activeConversationId,
+    conversations,
+    messages: allMessages,
+    fetchMessages,
+  } = useChatStore();
+  const [lastMessageStatus, setLastMessageStatus] = useState<"delivered" | "seen">(
+    "delivered"
+  );
 
-    if(!selectedConvo){
-        return <ChatWelcomeScreen/>
+  const messages = allMessages[activeConversationId!]?.items ?? [];
+  const reversedMessages = [...messages].reverse();
+  const hasMore = allMessages[activeConversationId!]?.hasMore ?? false;
+  const selectedConvo = conversations.find((c) => c._id === activeConversationId);
+  const key = `chat-scroll-${activeConversationId}`;
+  const hasRestoredRef = useRef(false);
+
+  // ref
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // seen status
+  useEffect(() => {
+    const lastMessage = selectedConvo?.lastMessage;
+    if (!lastMessage) {
+      return;
     }
 
-    if(!messages.length){
-        return(
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-                Chưa có tin nhắn nào trong cuộc trò chuyện này.
-            </div>
-        )
+    const seenBy = selectedConvo?.seenBy ?? [];
+
+    setLastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
+  }, [selectedConvo]);
+
+  // kéo xuống dưới khi load convo
+  useLayoutEffect(() => {
+    if (!messagesEndRef.current) return;
+
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [activeConversationId]);
+
+  const fetchMoreMessages = async () => {
+    if (!activeConversationId) {
+      return;
     }
-    return(
-        <div className="p-4 bg-zinc-100 dark:bg-zinc-900 h-full flex flex-col overflow-hidden">
-            <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden beautiful-scrollbar">
-                {messages.map((m, index)=><MessageItem key={m._id ?? index} message={m} index={index} messages={messages} selectedConvo={selectedConvo} lastMessageStatus="delivered"/>)}
-            </div>
-        </div>
-    )
-}
+
+    try {
+      await fetchMessages(activeConversationId);
+    } catch (error) {
+      console.error("Lỗi xảy ra khi fetch thêm tin", error);
+    }
+  };
+
+  const handleScrollSave = () => {
+    const container = containerRef.current;
+    if (!container || !activeConversationId) {
+      return;
+    }
+
+    sessionStorage.setItem(
+      key,
+      JSON.stringify({
+        scrollTop: container.scrollTop,
+        scrollHeight: container.scrollHeight,
+      })
+    );
+  };
+useLayoutEffect(() => {
+  const container = containerRef.current;
+
+  if (!container || !activeConversationId) return;
+
+  if (hasRestoredRef.current) return;
+
+  const item = sessionStorage.getItem(key);
+
+  requestAnimationFrame(() => {
+    if (item) {
+      const { scrollTop } = JSON.parse(item);
+      container.scrollTop = scrollTop;
+    } else {
+      container.scrollTop = container.scrollHeight;
+    }
+
+    hasRestoredRef.current = true;
+  });
+}, [activeConversationId]);
+
+  if (!selectedConvo) {
+    return <ChatWelcomeScreen />;
+  }
+
+  if (!messages?.length) {
+    return (
+      <div className="flex h-full items-center justify-center text-muted-foreground ">
+        Chưa có tin nhắn nào trong cuộc trò chuyện này.
+      </div>
+    );
+  }
+
+  useEffect(() => {
+  hasRestoredRef.current = false;
+}, [activeConversationId]);
+
+  return (
+    <div className="p-4 bg-primary-foreground h-full flex flex-col overflow-hidden">
+      <div
+        id="scrollableDiv"
+        ref={containerRef}
+        onScroll={handleScrollSave}
+        className="flex flex-col-reverse overflow-y-auto overflow-x-hidden beautiful-scrollbar"
+      >
+        <div ref={messagesEndRef}></div>
+        <InfiniteScroll
+          dataLength={messages.length}
+          next={fetchMoreMessages}
+          hasMore={hasMore}
+          scrollableTarget="scrollableDiv"
+          loader={<p>Đang tải...</p>}
+          inverse={true}
+          style={{
+            display: "flex",
+            flexDirection: "column-reverse",
+            overflow: "visible",
+          }}
+        >
+          {reversedMessages.map((message, index) => (
+            <MessageItem
+              key={message._id ?? index}
+              message={message}
+              index={index}
+              messages={reversedMessages}
+              selectedConvo={selectedConvo}
+              lastMessageStatus={lastMessageStatus}
+            />
+          ))}
+        </InfiniteScroll>
+      </div>
+    </div>
+  );
+};
+
 export default ChatWindowBody;

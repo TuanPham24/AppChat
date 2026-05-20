@@ -7,13 +7,14 @@ export const sentFriendRequest = async (req, res) => {
     const { message, to } = req.body;
     const from = req.user._id;
 
-    if (from === to) {
+    if (from.toString() === to.toString()) {
       return res
         .status(400)
         .json({ message: "Không thể gửi lời mời kết bạn cho chính mình" });
     }
 
     const userExists = await User.exists({ _id: to });
+    console.log("userExists:", userExists);
     if (!userExists) {
       return res.status(404).json({ message: "Người dùng không tồn tại" });
     }

@@ -42,9 +42,9 @@ export interface ChatState{
     sendDirectMessage:(recipientId:string, content:string, imgUrl?:string, conversationId?:string) => Promise<void>;
     sendGroupMessage:(conversationId:string, content:string, imgUrl?:string) => Promise<void>;
     // add message
-    addMessage:(message:Message)=>Promise<void>;
+addMessage:(message:Message)=>Promise<void>;
     // update convo
-    updateConversation:(conversation:Conversation)=>void;
+    updateConversation:(conversation: unknown)=>void;
     markAsSeen:()=>Promise<void>;
 }
 
@@ -53,4 +53,10 @@ export interface SocketState{
     onlineUsers: string[];
     connectSocket: () => void;
     disconnectSocket: () => void;
+}
+
+export interface FriendState{
+    loading: boolean;
+    searchByUsername: (username: string) => Promise<User | null>;
+    addFriend: (to: string, message?: string) => Promise<string>;
 }

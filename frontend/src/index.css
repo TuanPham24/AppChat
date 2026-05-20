@@ -224,6 +224,14 @@
     color: hsl(var(--chat-bubble-received-foreground));
   }
 
+  .error-message{
+    @apply text-sm text-destructive;
+  }
+
+  .success-message{
+    @apply text-sm text-emerald-500;
+  }
+
   .status-online {
     background: hsl(var(--online));
   }

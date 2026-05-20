@@ -19,18 +19,14 @@ const MessageItem = ({
   selectedConvo,
   lastMessageStatus,
 }: MessageItemProps) => {
-  // lấy tin nhắn trước đó
-  const prev = index - 1 >= 0 ? messages[index - 1] : undefined;
+  const prev = index + 1 < messages.length ? messages[index + 1] : undefined;
 
-  // hiện time nếu cách nhau > 5 phút
   const isShowTime =
-  index === 0 ||
-  message.senderId !== prev?.senderId ||
-  new Date(message.createdAt).getTime() -
-    new Date(prev?.createdAt || 0).getTime() >
-    300000;
+    index === 0 ||
+    new Date(message.createdAt).getTime() -
+      new Date(prev?.createdAt || 0).getTime() >
+      300000; // 5 phút
 
-  // hiện avatar nếu khác người gửi hoặc khác mốc thời gian
   const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
 
   const participant = selectedConvo.participants.find(
@@ -38,61 +34,51 @@ const MessageItem = ({
   );
 
   return (
-    <div
-      className={cn(
-        "flex gap-2 mt-1 message-bounce mt-1",
-        message.isOwn ? "justify-end" : "justify-start"
-      )}
-    >
-      {/* avatar */}
-      {!message.isOwn && (
-        <div className="w-8 shrink-0">
-          {isGroupBreak && (
-            <UserAvatar
-              type="chat"
-              name={participant?.displayName ?? "Moji"}
-              avatarUrl={participant?.avatarUrl ?? undefined}
-            />
-          )}
-        </div>
+    <>
+      {/* time */}
+      {isShowTime && (
+        <span className="flex justify-center text-xs text-muted-foreground px-1">
+          {formatMessageTime(new Date(message.createdAt))}
+        </span>
       )}
 
-      {/* message content */}
       <div
         className={cn(
-          "max-w-xs lg:max-w-md flex flex-col space-y-1",
-          message.isOwn ? "items-end" : "items-start"
+          "flex gap-2 message-bounce mt-1",
+          message.isOwn ? "justify-end" : "justify-start"
         )}
       >
-        {/* bubble */}
-        <Card
-          className={cn(
-            "p-3 border-0 shadow-none",
-            message.isOwn
-              ? "!bg-purple-500 text-white"
-              : "!bg-muted"
-          )}
-        >
-          <p className="text-sm leading-relaxed break-words">
-            {message.content}
-          </p>
-        </Card>
-
-        {/* time */}
-        {isShowTime && (
-          <span
-            className={cn(
-              "text-[11px] text-muted-foreground px-1 opacity-70",
-              message.isOwn ? "text-right" : "text-left"
+        {/* avatar */}
+        {!message.isOwn && (
+          <div className="w-8">
+            {isGroupBreak && (
+              <UserAvatar
+                type="chat"
+                name={participant?.displayName ?? "Moji"}
+                avatarUrl={participant?.avatarUrl ?? undefined}
+              />
             )}
-          >
-            {formatMessageTime(new Date(message.createdAt))}
-          </span>
+          </div>
         )}
 
-        {/* delivered / seen */}
-        {message.isOwn &&
-          message._id === selectedConvo.lastMessage?._id && (
+        {/* tin nhắn */}
+        <div
+          className={cn(
+            "max-w-xs lg:max-w-md space-y-1 flex flex-col",
+            message.isOwn ? "items-end" : "items-start"
+          )}
+        >
+          <Card
+            className={cn(
+              "p-3",
+              message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
+            )}
+          >
+            <p className="text-sm leading-relaxed break-words">{message.content}</p>
+          </Card>
+
+          {/* seen/ delivered */}
+          {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
             <Badge
               variant="outline"
               className={cn(
@@ -105,8 +91,9 @@ const MessageItem = ({
               {lastMessageStatus}
             </Badge>
           )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
