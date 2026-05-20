@@ -15,9 +15,13 @@ export const updateConversationAfterCreateMessage = async (
 
       content: message.content,
 
-      senderId,
+      sender: {
+        _id: senderId,
+        displayName: "",
+        avatarUrl: null,
+      },
 
-      createAt: message.createAt,
+      createAt: message.createdAt,
     },
   });
 
@@ -29,5 +33,17 @@ export const updateConversationAfterCreateMessage = async (
     const prevCount = conversation.unreadCounts.get(memberId) || 0;
 
     conversation.unreadCounts.set(memberId, isSender ? 0 : prevCount + 1);
+  });
+};
+
+export const emitNewMessage = (io, conversation, message) => {
+  io.to(conversation._id.toString()).emit("new-message", {
+    message,
+    conversation: {
+      _id: conversation._id,
+      lastMessage: conversation.lastMessage,
+      lastMessageAt: conversation.lastMessageAt,
+    },
+    unreadCounts: Object.fromEntries(conversation.unreadCounts),
   });
 };

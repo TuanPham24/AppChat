@@ -14,7 +14,6 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
 
 const unreadCount = convo.unreadCounts?.[user._id] ?? 0;
   const name = convo.group?.name ?? "";
-  console.log("name:", name);
   const handleSelectConversation = async (id: string) => {
     setActiveConversationId(id);
     if (!messages[id]) {
