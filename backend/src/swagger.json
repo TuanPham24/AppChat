@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Moji Chat API",
+    "version": "1.0.0",
+    "description": "API documentation for Moji Chat"
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "paths": {}
+}
