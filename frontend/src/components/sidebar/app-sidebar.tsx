@@ -42,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" className="bg-gradient-primary">
                 <a href="#" className="w-full">
                   <div className="flex w-full items-center px-2 justify-between">
-                    <h1 className="text-xl font-bold text-white">Moji</h1>
+                    <h1 className="text-xl font-bold text-white">Wypte</h1>
                     <div className="flex items-center gap-2">
                       <Sun className="size-4 text-white/80" />
                       <Switch checked={isDark} onCheckedChange={toggleTheme} className ="data-[state=checked]:bg-background/80"/>
