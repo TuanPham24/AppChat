@@ -36,7 +36,7 @@ const ChatWelcomeScreen = () => {
 
           {/* Title */}
           <h2 className="mb-3 bg-gradient-chat bg-clip-text text-3xl font-bold text-transparent">
-            Chào mừng bạn đến với Moji!
+            Chào mừng bạn đến với Wypte!
           </h2>
 
           {/* Description */}
