@@ -3,7 +3,7 @@ import type {
   UseFormRegister,
 } from "react-hook-form";
 
-import type { IFormValues } from "../../chat/AddFriendModal";
+import type { IFormValues } from "../chat/AddFriendModal";
 
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";

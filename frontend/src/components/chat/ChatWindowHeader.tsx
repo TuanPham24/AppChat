@@ -3,9 +3,9 @@ import { useChatStore } from "@/stores/useChatStore";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Separator } from "@/components/ui/separator";
-import  UserAvatar  from "@/chat/UserAvatar";
-import  StatusBadge  from "@/chat/StatusBadge";
-import  GroupChatAvatar  from "@/chat/GroupChatAvatar";
+import  UserAvatar  from "@/components/chat/UserAvatar";
+import  StatusBadge  from "@/components/chat/StatusBadge";
+import  GroupChatAvatar  from "@/components/chat/GroupChatAvatar";
 import { useSocketStore } from "@/stores/useSocketStore";
 
 const ChatWindowHeader = ({chat}:{chat? : Conversation}) =>{

@@ -1,6 +1,9 @@
 import Friend from "../models/Friend.js";
 import User from "../models/User.js";
 import FriendRequest from "../models/FriendRequest.js";
+import { io } from "../socket/index.js";
+
+const populateFields = "_id username displayName avatarUrl";
 
 export const sentFriendRequest = async (req, res) => {
   try {
@@ -50,9 +53,19 @@ export const sentFriendRequest = async (req, res) => {
       message,
     });
 
+    const populated = await FriendRequest.findById(request._id)
+      .populate("from", populateFields)
+      .populate("to", populateFields)
+      .lean();
+
+    io.to(to.toString()).emit("friend-request", {
+      type: "received",
+      request: populated,
+    });
+
     return res
       .status(201)
-      .json({ message: "Gửi lời mời kết bạn thành công", request });
+      .json({ message: "Gửi lời mời kết bạn thành công", request: populated });
   } catch (error) {
     console.error("Lỗi khi gửi lời mời kết bạn", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
@@ -131,10 +144,10 @@ export const getAllFriends = async (req, res) => {
     const friendShip = await Friend.find({
       $or: [{ userA: userId }, { userB: userId }],
     })
-      .populate("userA userB", "_id displayName avatarUrl")
+      .populate("userA userB", "_id displayName avatarUrl username")
       .lean();
     if (!friendShip.length) {
-      return res.status(200).json("friends: []");
+      return res.status(200).json({ friends: [] });
     }
 
     const friends = friendShip.map((f) =>

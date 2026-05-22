@@ -17,11 +17,11 @@ import {
   SidebarGroupLabel,
   SidebarGroupAction,
 } from "@/components/ui/sidebar"
-import CreateNewChat from "@/chat/CreateNewChat"
-import NewGroupChatModal from "@/chat/NewGroupChatModal"
-import GroupChatList from "@/chat/GroupChatList"
-import AddFriendModal from "@/chat/AddFriendModal"
-import DirectMessageList from "@/chat/DirectMessageList"
+import CreateNewChat from "@/components/chat/CreateNewChat"
+import NewGroupChatModal from "@/components/chat/NewGroupChatModal"
+import GroupChatList from "@/components/chat/GroupChatList"
+import AddFriendModal from "@/components/chat/AddFriendModal"
+import DirectMessageList from "@/components/chat/DirectMessageList"
 import { useThemeStore } from "@/stores/useThemeStore"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { NavUser } from "./nav-user"

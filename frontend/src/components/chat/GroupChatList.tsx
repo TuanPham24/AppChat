@@ -1,5 +1,5 @@
 import {useChatStore} from "@/stores/useChatStore"
-import GroupChatCard from "@/chat/GroupChatCard"
+import GroupChatCard from "@/components/chat/GroupChatCard"
 const GroupChatList = () =>{
     const {conversations} = useChatStore();
     if(!conversations) return null;

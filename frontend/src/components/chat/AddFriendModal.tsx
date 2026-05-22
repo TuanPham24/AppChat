@@ -12,15 +12,15 @@ import { UserPlus } from "lucide-react";
 
 import type { User } from "@/types/user";
 
-import { useFriendStore } from "../stores/useFriendStore";
+import { useFriendStore } from "../../stores/useFriendStore";
 
 import { useForm } from "react-hook-form";
 
 import { toast } from "sonner";
 
-import SearchForm from "@/components/AddFriendModal/SearchForm";
+import SearchForm from "@/components/addFriendModal/SearchForm";
 
-import SendFriendRequestForm from "@/components/AddFriendModal/SendFriendRequestForm";
+import SendFriendRequestForm from "@/components/addFriendModal/SendFriendRequestForm";
 
 export interface IFormValues {
   username: string;
@@ -137,15 +137,12 @@ const AddFriendModal = () => {
       {/* Base UI dùng render thay vì asChild */}
       <DialogTrigger
         render={
-          <div className="flex justify-center items-center size-5 rounded-full hover:bg-sidebar-accent cursor-pointer z-10" />
+          <div className="flex justify-center items-center size-5 rounded-full hover:bg-sidebar-accent cursor-pointer z-10">
+            <UserPlus className="size-4" />
+            <span className="sr-only">Kết bạn</span>
+          </div>
         }
-      >
-        <UserPlus className="size-4" />
-
-        <span className="sr-only">
-          Kết bạn
-        </span>
-      </DialogTrigger>
+      />
 
       <DialogContent className="sm:max-w-[425px] border-none">
         <DialogHeader>

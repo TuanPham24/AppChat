@@ -1,5 +1,5 @@
 import { useChatStore } from "@/stores/useChatStore";
-import DirectMessageCard from "@/chat/DirectMessageCard";
+import DirectMessageCard from "@/components/chat/DirectMessageCard";
 const DirectMessageList = () =>{
     const {conversations} = useChatStore();
     if(!conversations) return null;

@@ -92,6 +92,10 @@ useLayoutEffect(() => {
   });
 }, [activeConversationId]);
 
+  useEffect(() => {
+    hasRestoredRef.current = false;
+  }, [activeConversationId]);
+
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;
   }
@@ -103,10 +107,6 @@ useLayoutEffect(() => {
       </div>
     );
   }
-
-  useEffect(() => {
-  hasRestoredRef.current = false;
-}, [activeConversationId]);
 
   return (
     <div className="p-4 bg-primary-foreground h-full flex flex-col overflow-hidden">
